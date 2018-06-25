@@ -80,7 +80,7 @@ int main(int argc, char *argv[]){
         break;
    
       case KEY_HOME:
-        texto_movercursor(fluxo,&pfluxo,-100000);
+        texto_movercursor(fluxo,&pfluxo,-1000);
         break;
    
       case KEY_END:
