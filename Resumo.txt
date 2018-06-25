@@ -1,9 +1,0 @@
-XTERNAS:
-
-AULA A:
--Fitas magnéticas
--Tecnologia RAID (Maior desempenho e disponibilidade de dados em servidores e sistemas de grande porte.)
-RAID - São conjuntos de técnicas para utilização de vários discos agrupados em paralelo, empregando redundâncias para corrigir falhas.
--Discos magnéticos:
-São  ompostos por:
-   
