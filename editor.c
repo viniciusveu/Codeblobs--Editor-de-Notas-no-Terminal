@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <curses.h>
+#include <ctype.h>
+#include <string.h>
+#include "editor.h"
 
 //====================================================================
 
@@ -25,7 +28,7 @@ static unsigned int n_strings = 0;
 
 //====================================================================
 
-Linha linha_novo(Linha ant, Texto texto) {
+Linha linha_novo(Linha ant, Texto texto) { //Cria um novo nó de linha
 	Linha linha = malloc(sizeof(struct Linha_l));
 	linha->antL = ant;
 	linha->elem = texto;
@@ -35,7 +38,7 @@ Linha linha_novo(Linha ant, Texto texto) {
 
 //====================================================================
 
-Texto texto_novo(char caractere){
+Texto texto_novo(char caractere){ //Cria um novo nó da string dinâmica
 	Texto lista = malloc(sizeof(struct Texto_t));
 	if(lista == NULL){
 		return NULL;
@@ -48,7 +51,7 @@ Texto texto_novo(char caractere){
 
 //====================================================================
 
-void texto_apagar(Texto texto){
+void texto_apagar(Texto texto){ //Apaga nó de caracter anterior
 	for(;texto->ant != NULL;texto = texto->ant);
 	texto = texto->pro;
 	for(;texto->pro != NULL;texto = texto->pro){
@@ -60,7 +63,7 @@ void texto_apagar(Texto texto){
 
 //====================================================================
 
-char * texto_parastring(Texto texto,Cursor cursor){
+char * texto_parastring(Texto texto,Cursor cursor){ //Converte da ED p/ string, para printar a estrutura na tela
 	if(texto == NULL){
 		return NULL;
 	}
@@ -100,7 +103,7 @@ char * texto_parastring(Texto texto,Cursor cursor){
 
 //====================================================================
 
-Texto texto_abrir(char * const arquivo,Linha linha){
+Texto texto_abrir(char * const arquivo,Linha linha){ //Abre o arquivo de texto e coloca os dados na estrutura
 	unsigned int i;
 	for(i = 0;arquivo[i] != '\0';++i){
 		if(arquivo[i] == '\n'){
@@ -140,7 +143,7 @@ Texto texto_abrir(char * const arquivo,Linha linha){
 
 //====================================================================
 
-void texto_salvar(Texto texto,char * nome_do_arquivo){
+void texto_salvar(Texto texto,char * nome_do_arquivo){ //Salva os dados da ED no arquivo
 	for(;texto->ant != NULL;texto = texto->ant);
 	unsigned int i;
 	for(i = 0;nome_do_arquivo[i] != '\0';++i){
@@ -162,7 +165,7 @@ void texto_salvar(Texto texto,char * nome_do_arquivo){
 
 //====================================================================
 
-Cursor texto_inserirchar(Texto texto,Cursor cursor,char caractere, Linha linha){
+Cursor texto_inserirchar(Texto texto,Cursor cursor,char caractere, Linha linha){ //Insere novo nó de caracter e atualiza cursor
 	if(texto == NULL){
 		return NULL;
 	}
@@ -195,7 +198,7 @@ Cursor texto_inserirchar(Texto texto,Cursor cursor,char caractere, Linha linha){
 
 //====================================================================
 
-void texto_deletarchar(Texto * texto,Cursor * cursor){
+void texto_deletarchar(Texto * texto,Cursor * cursor){ //Deleta prox caracter
 	if((*cursor) == NULL){
 		return;
 	}
@@ -233,7 +236,7 @@ void texto_deletarchar(Texto * texto,Cursor * cursor){
 
 //====================================================================
 
-void texto_movercursor(Texto texto,Cursor * cursor,long int num){
+void texto_movercursor(Texto texto,Cursor * cursor,long int num){ //Move cursor
 	if(texto == NULL){
 		return;
 	}
@@ -271,7 +274,7 @@ void texto_movercursor(Texto texto,Cursor * cursor,long int num){
 
 //====================================================================
 
-void texto_limpar(){
+void texto_limpar(){ //	Limpa a string
 	unsigned int i;
 	for(i = 0;i < n_strings;++i){
 		free(strings[i]);
@@ -283,7 +286,7 @@ void texto_limpar(){
 
 //====================================================================
 
-int procurar(char * palavra,char * texto){
+int procurar(char * palavra,char * texto){ //Procura palavra na ED
 	 
 	unsigned int i;
 	for(i = 0;palavra[i] != '\0';++i){
@@ -315,7 +318,7 @@ int procurar(char * palavra,char * texto){
 
 //====================================================================
 
-void como_usar(void) {
+void como_usar(void) { //Informações quanto ao uso
 	printf( "=================================================\n"
 		"Ins:   Procurar palavra \n"
 	    "Enter: Salvar \n"
@@ -331,7 +334,7 @@ void como_usar(void) {
 
 //====================================================================
 
-void menu(char *nome_arquivo) {
+void menu(char *nome_arquivo) { //Menu de opções
 	char op;
 	printf("n - Deseja criar novo arquivo de texto \n"
            "a - Abrir existente \n"
@@ -350,7 +353,7 @@ void menu(char *nome_arquivo) {
       		printf("ERRO na criação do arquivo %s!!! \n", nome_arquivo);
       		exit(1); 
     	}
-	  	fputs("Escreva aqui  ", f);
+	  	fputs("Escreva aqui ", f);
     	fclose(f);
  	} else if(op == 'C') exit(EXIT_SUCCESS); //Cancela processo
     else printf("Entrada inválida!\n");

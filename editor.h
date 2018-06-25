@@ -18,5 +18,6 @@ void texto_movercursor(Texto texto,Cursor * cursor,long int num);
 void texto_limpar();
 int procurar(char * palavra, char texto[]);
 void como_usar(void);
+void menu(char *nome_arquivo);
 
 #endif

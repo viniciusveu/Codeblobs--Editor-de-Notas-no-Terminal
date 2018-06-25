@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <curses.h>
-#include <string.h>
-#include <ctype.h>
-#include "editor.h"
 #include "editor.c"
 
 //====================================================================
@@ -25,12 +20,12 @@ void sair(char* nome_arquivo){ //Fecha a ncurses, salva o texto no arquivo.
 int main(int argc, char *argv[]){ //Pergunta se quer abrir ou criar arquivo.
   if(argc == 2) como_usar(); //Se a função for chamada com mais de um argumento, é mostrado informações sobre o programa.
 
-  char op; char nome_arquivo[200]; char palavra[16];
+  char nome_arquivo[200]; char palavra[16];
   
   menu(nome_arquivo);
 
   fluxo = texto_abrir(nome_arquivo, linha);
-  pfluxo = fluxo;
+  pfluxo = fluxo->pro;
 
   initscr();
   keypad(stdscr,TRUE);
@@ -105,6 +100,8 @@ int main(int argc, char *argv[]){ //Pergunta se quer abrir ou criar arquivo.
    	
       case '\n':
         //mostre o menu
+        // while(pfluxo != NULL)
+        //   texto_movercursor(fluxo,&pfluxo,1);
         sair(nome_arquivo);
         exit(EXIT_SUCCESS);
       break;
