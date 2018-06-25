@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
         break;
    
       case KEY_UP:
-        texto_movercursor(fluxo,&pfluxo,-64);
+        texto_movercursor(fluxo,&pfluxo,-100);
         break;
    
       case KEY_DOWN:
