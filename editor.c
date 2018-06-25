@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <curses.h>
 
+//====================================================================
+
 typedef struct Texto_t{
 	struct Texto_t * ant;
 	char letra;
@@ -16,8 +18,12 @@ typedef struct Linha_l {
 	struct Linha_l * proxL;
 } * Linha;
 
+//====================================================================
+
 static char * * strings = NULL;
 static unsigned int n_strings = 0;
+
+//====================================================================
 
 Linha linha_novo(Linha ant, Texto texto) {
 	Linha linha = malloc(sizeof(struct Linha_l));
@@ -25,7 +31,9 @@ Linha linha_novo(Linha ant, Texto texto) {
 	linha->elem = texto;
 	linha->proxL = NULL;
 	return linha;
-}
+} //linha_novo
+
+//====================================================================
 
 Texto texto_novo(char caractere){
 	Texto lista = malloc(sizeof(struct Texto_t));
@@ -36,7 +44,9 @@ Texto texto_novo(char caractere){
 	lista->letra = caractere;
 	lista->pro = NULL;
 	return lista;
-}
+} //texto_novo
+
+//====================================================================
 
 void texto_apagar(Texto texto){
 	for(;texto->ant != NULL;texto = texto->ant);
@@ -46,7 +56,9 @@ void texto_apagar(Texto texto){
 	}
 	free(texto->ant);
 	free(texto);
-}
+} //texto_apagar
+
+//====================================================================
 
 char * texto_parastring(Texto texto,Cursor cursor){
 	if(texto == NULL){
@@ -84,7 +96,9 @@ char * texto_parastring(Texto texto,Cursor cursor){
 	strings[n_strings] = string;
 	++n_strings;
 	return string;
-}
+} //texto_parastring
+
+//====================================================================
 
 Texto texto_abrir(char * const arquivo,Linha linha){
 	unsigned int i;
@@ -122,7 +136,9 @@ Texto texto_abrir(char * const arquivo,Linha linha){
 	texto->pro = NULL;
 	fclose(arq);
 	return texto;
-}
+} //texto_abrir
+
+//====================================================================
 
 void texto_salvar(Texto texto,char * nome_do_arquivo){
 	for(;texto->ant != NULL;texto = texto->ant);
@@ -142,7 +158,9 @@ void texto_salvar(Texto texto,char * nome_do_arquivo){
 	}
 	fputc('\n',arquivo);
 	fclose(arquivo);
-}
+} //texto_salvar
+
+//====================================================================
 
 Cursor texto_inserirchar(Texto texto,Cursor cursor,char caractere, Linha linha){
 	if(texto == NULL){
@@ -170,9 +188,12 @@ Cursor texto_inserirchar(Texto texto,Cursor cursor,char caractere, Linha linha){
 	if(caractere == '\n') {
 		linha->proxL = linha_novo(linha, cursor);
 		linha = linha->proxL;
+		printw("\n");
 	}
 	return novo;
-}
+} //texto_inserirchar
+
+//====================================================================
 
 void texto_deletarchar(Texto * texto,Cursor * cursor){
 	if((*cursor) == NULL){
@@ -208,7 +229,9 @@ void texto_deletarchar(Texto * texto,Cursor * cursor){
 			return;
 		}
 	}
-}
+} //texto_deletarchar
+
+//====================================================================
 
 void texto_movercursor(Texto texto,Cursor * cursor,long int num){
 	if(texto == NULL){
@@ -244,7 +267,9 @@ void texto_movercursor(Texto texto,Cursor * cursor,long int num){
 		}
 		return;
 	}
-}
+} //texto_movercursor
+
+//====================================================================
 
 void texto_limpar(){
 	unsigned int i;
@@ -254,47 +279,79 @@ void texto_limpar(){
 	free(strings);
 	strings = NULL;
 	n_strings = 0;
-}
+} //texto_limpar
+
+//====================================================================
 
 int procurar(char * palavra,char * texto){
 	 
-	 unsigned int i;
-	 for(i = 0;palavra[i] != '\0';++i){
-	   if(palavra[i] == '\n'){
-	     palavra[i] = '\0';
-	     break;
-	   }
-	 }
-	 char * delims = " ";
-     char * result = NULL;
-     result = strtok( texto, delims );
+	unsigned int i;
+	for(i = 0;palavra[i] != '\0';++i){
+		if(palavra[i] == '\n'){
+			palavra[i] = '\0';
+			break;
+		}
+	}
+	char * delims = " ";
+    char * result = NULL;
+    result = strtok( texto, delims );
      
-     while( result != NULL ) {
-         if(strcmp(palavra, result) == 0) {
-            attron(A_BOLD);
+    while( result != NULL ) {
+        if(strcmp(palavra, result) == 0) {
+        	attron(A_BOLD);
             printw("%s ", palavra);
             attroff(A_BOLD);
             refresh();
             result = strtok( NULL, delims );
-         }else
-         {
+        } else {
             printw("%s ", result);
             refresh();
             result = strtok( NULL, delims );
-         }
-     }
-     getch();
-     printw ("\n");
-}
+        }
+    }
+    getch();
+    printw ("\n");
+} //procurar
+
+//====================================================================
 
 void como_usar(void) {
 	printf( "=================================================\n"
-		"Ins: Procura palavra \n"
-	    "Enter: Salva \n"
+		"Ins:   Procurar palavra \n"
+	    "Enter: Salvar \n"
+		"Esc:   Salvar e fechar \n"
+		"F2:    Ajuda \n"
 		"\n"
-	   	"Nome autores: Vinícius Vedovotto\n"
-		"              João Pedro da Silva Baptista\n"
+	   	"Nome autores: João Pedro da Silva Baptista\n"
+		"              Vinícius Vedovotto\n"            
 		"Trabalho de ED I - Professor Ronaldo\n"
 		"Versão v1.0\n"
 		"=================================================\n\n");
-}
+} //como_usar
+
+//====================================================================
+
+void menu(char *nome_arquivo) {
+	char op;
+	printf("n - Deseja criar novo arquivo de texto \n"
+           "a - Abrir existente \n"
+           "c - Cancelar \n"
+           ">");
+  	scanf("%c", &op);
+  	op = toupper(op);
+ 	if(op == 'A') {
+   		printf("Qual o nome do arquivo? [sem espaços]\n");
+    	scanf("%s", nome_arquivo);
+  	} else if(op == 'N') {
+    	printf("Qual será o nome do seu arquivo? [sem espaços]\n");
+	  	scanf("%s", nome_arquivo);
+    	FILE* f;	
+	 	if( (f=fopen(nome_arquivo, "w+r")) == NULL) { //Cria novo arquivo
+      		printf("ERRO na criação do arquivo %s!!! \n", nome_arquivo);
+      		exit(1); 
+    	}
+	  	fputs("Escreva aqui  ", f);
+    	fclose(f);
+ 	} else if(op == 'C') exit(EXIT_SUCCESS); //Cancela processo
+    else printf("Entrada inválida!\n");
+} //menu

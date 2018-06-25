@@ -1,49 +1,34 @@
 #include <stdlib.h>
 #include <curses.h>
 #include <string.h>
+#include <ctype.h>
 #include "editor.h"
 #include "editor.c"
+
+//====================================================================
 
 Linha linha = NULL;
 Texto fluxo = NULL;
 Cursor pfluxo = NULL;
 
+//====================================================================
 
-void sair(char* nome_arquivo){
+void sair(char* nome_arquivo){ //Fecha a ncurses, salva o texto no arquivo.  
   endwin();
   texto_salvar(fluxo,nome_arquivo);
   texto_apagar(fluxo);
   printf("\nTexto salvo! :D\n");
 }
 
-int main(int argc, char *argv[]){
-  if(argc == 2) {
-    switch(*argv[1]) {
-      case '?': 
-        como_usar();
-        break;
-    }
-  }
+//====================================================================
+
+int main(int argc, char *argv[]){ //Pergunta se quer abrir ou criar arquivo.
+  if(argc == 2) como_usar(); //Se a função for chamada com mais de um argumento, é mostrado informações sobre o programa.
+
   char op; char nome_arquivo[200]; char palavra[16];
   
-  printf("Deseja criar novo arquivo de texto, abrir existente ou cancelar? [a,n,c]: ");
-  scanf("%c", &op);
-  if(op == 'a') {
-    printf("Qual o nome do arquivo? [sem espaços]\n");
-    scanf("%s", nome_arquivo);
-  } else if(op == 'n') {
-    printf("Qual será o nome do seu arquivo? [sem espaços]\n");
-	  scanf("%s", nome_arquivo); 
-    FILE* f;	
-	  if( (f=fopen(nome_arquivo, "w+r")) == NULL) {
-      printf("ERRO na criação do arquivo %s!!! \n", nome_arquivo);
-      exit(1);
-    }
-	  fputs("Escreva aqui  ", f);
-    fclose(f);
- 	} else if(op == 'c') exit(EXIT_SUCCESS);
-    else printf("Entrada inválida!\n");
-  
+  menu(nome_arquivo);
+
   fluxo = texto_abrir(nome_arquivo, linha);
   pfluxo = fluxo;
 
@@ -90,6 +75,22 @@ int main(int argc, char *argv[]){
       case KEY_DC:
         texto_deletarchar(&fluxo,&pfluxo);
         break;
+
+      case KEY_F(2):
+        erase();
+        printw( "=================================================\n"
+		            "Ins: Procura palavra \n"
+	              "Enter: Salva e fecha \n"
+		            "Esc: Salva e fecha \n"
+		            "F2: Ajuda \n"
+		            "\n"
+	   	          "Nome autores: João Pedro da Silva Baptista\n"
+		            "              Vinícius Vedovotto\n"            
+		            "Trabalho de ED I - Professor Ronaldo\n"
+		            "Versão v1.0\n"
+		            "=================================================\n\n");
+        getch();
+        break;
    
       case KEY_IC:
         erase();
@@ -97,17 +98,26 @@ int main(int argc, char *argv[]){
    	    scanw("%19s", palavra);
    	    procurar(palavra,texto_parastring(fluxo,pfluxo));
    	    break;
+
+      case KEY_BREAK:
+        exit(EXIT_SUCCESS);
+        break;
    	
       case '\n':
-        printw("\n");
         //mostre o menu
         sair(nome_arquivo);
         exit(EXIT_SUCCESS);
       break;
+
+      case 27:
+        sair(nome_arquivo);
+        exit(EXIT_SUCCESS);
+        break;
    
       default:
         if(ch < 256){
           texto_inserirchar(fluxo,pfluxo,ch,linha);
+          beep();
         }
     
         else{
@@ -122,4 +132,6 @@ int main(int argc, char *argv[]){
   }
   sair(nome_arquivo);
   exit(EXIT_SUCCESS);
-}
+} //main
+
+//====================================================================
