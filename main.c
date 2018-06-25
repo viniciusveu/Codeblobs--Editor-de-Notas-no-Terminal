@@ -17,10 +17,16 @@ void sair(char* nome_arquivo){
 }
 
 int main(int argc, char *argv[]){
- 
-  char op; char nome_arquivo[200];
- 
-  printf("Deseja criar novo arquivo de texto ou abrir existente? [a,n]: ");
+  if(argc == 2) {
+    switch(*argv[1]) {
+      case '?': 
+        como_usar();
+        break;
+    }
+  }
+  char op; char nome_arquivo[200]; char palavra[16];
+  
+  printf("Deseja criar novo arquivo de texto, abrir existente ou cancelar? [a,n,c]: ");
   scanf("%c", &op);
   if(op == 'a') {
     printf("Qual o nome do arquivo? [sem espaços]\n");
@@ -35,7 +41,8 @@ int main(int argc, char *argv[]){
     }
 	  fputs("Escreva aqui  ", f);
     fclose(f);
- 	} else printf("Entrada inválida!\n");
+ 	} else if(op == 'c') exit(EXIT_SUCCESS);
+    else printf("Entrada inválida!\n");
   
   fluxo = texto_abrir(nome_arquivo, linha);
   pfluxo = fluxo;
@@ -84,12 +91,12 @@ int main(int argc, char *argv[]){
         texto_deletarchar(&fluxo,&pfluxo);
         break;
    
-      /*case KEY_IC:
+      case KEY_IC:
         erase();
    	    printw ("Digite a palavra a ser procurada:\n");
-   	    scanw("%19s",palavra);
+   	    scanw("%19s", palavra);
    	    procurar(palavra,texto_parastring(fluxo,pfluxo));
-   	    break;*/
+   	    break;
    	
       case '\n':
         printw("\n");

@@ -106,6 +106,7 @@ Texto texto_abrir(char * const arquivo,Linha linha){
 		texto->letra = fgetc(arq);
 		if(texto->letra == '\n') {
 			linha->proxL = linha_novo(linha, texto->pro);
+			linha = linha->proxL;
 		}
 		texto->pro = malloc(sizeof(struct Texto_t));
 		texto->pro->ant = texto;
@@ -168,6 +169,7 @@ Cursor texto_inserirchar(Texto texto,Cursor cursor,char caractere, Linha linha){
 	}
 	if(caractere == '\n') {
 		linha->proxL = linha_novo(linha, cursor);
+		linha = linha->proxL;
 	}
 	return novo;
 }
@@ -206,11 +208,6 @@ void texto_deletarchar(Texto * texto,Cursor * cursor){
 			return;
 		}
 	}
-}
-
-void texto_bdeletarchar(Texto * texto,Cursor * cursor){
-	//falta aqui
-	return;
 }
 
 void texto_movercursor(Texto texto,Cursor * cursor,long int num){
@@ -259,7 +256,7 @@ void texto_limpar(){
 	n_strings = 0;
 }
 
-/*int procurar(char * palavra,char * texto){
+int procurar(char * palavra,char * texto){
 	 
 	 unsigned int i;
 	 for(i = 0;palavra[i] != '\0';++i){
@@ -288,5 +285,16 @@ void texto_limpar(){
      }
      getch();
      printw ("\n");
-}*/
+}
 
+void como_usar(void) {
+	printf( "=================================================\n"
+		"Ins: Procura palavra \n"
+	    "Enter: Salva \n"
+		"\n"
+	   	"Nome autores: Vinícius Vedovotto\n"
+		"              João Pedro da Silva Baptista\n"
+		"Trabalho de ED I - Professor Ronaldo\n"
+		"Versão v1.0\n"
+		"=================================================\n\n");
+}

@@ -16,6 +16,7 @@ void texto_deletarchar(Texto * texto,Cursor * cursor);
 void texto_bdeletarchar(Texto * texto,Cursor * cursor);
 void texto_movercursor(Texto texto,Cursor * cursor,long int num);
 void texto_limpar();
-//int procurar(char * palavra, char texto[]);
+int procurar(char * palavra, char texto[]);
+void como_usar(void);
 
 #endif
