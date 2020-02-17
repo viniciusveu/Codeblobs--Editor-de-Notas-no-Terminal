@@ -13,3 +13,11 @@ Alunos: João Pedro da Silva Baptista - 171253604
 	Vinícius Vedovotto - 171257499
 
 Professor: Ronaldo Celso Messias Correia
+
+
+Instalando as bibliotecas: 
+# sudo apt install libncurses5-dev
+
+Compilando no GCC: 
+# gcc main.c -o Codeblobs -lncurses
+
